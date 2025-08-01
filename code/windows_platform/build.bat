@@ -4,13 +4,13 @@ set optimizer_flags= -Zi
 
 if "%~1" == "-release" (
 set optimizer_flags= -O2 -DNDEBUG=1
-) 
+)
 
 set ignored_warnings=-wd4805 -wd4244 -wd4018 -wd4838 -wd4700
 set windows_build_path=..\..\build\windows
 set resources_path=..\..\resources
 set included_libraries=user32.lib d3d11.lib gdi32.lib dxguid.lib ole32.lib dwmapi.lib 
-set sdl_library_path=c:/SDL2-devel-2.0.16-VC/SDL2-2.0.16
+set sdl_library_path=C:/SDL2-2.0.16
 set sdl_dll_path=.\resources\SDL2.dll
 
 :: Compile the game's shaders
@@ -30,10 +30,10 @@ pushd %windows_build_path%
 :: Compile the game
 cl -WX -W3 %ignored_warnings% %optimizer_flags% -DWINDOWS=1 -DGAME=1 /FeVariosTemple /I %sdl_library_path%/include^
             ..\..\code\windows_platform\windows_main.cpp^
-           /link /LIBPATH %sdl_library_path%/lib/x64/SDL2.lib^
+           /link /LIBPATH %sdl_library_path%/lib/x86/SDL2.lib^
     %included_libraries%
 
-copy ..\..\code\windows_platform\resources\SDL2.dll SDL2.dll
+copy %resources_path%\SDL2.dll SDL2.dll
 copy %resources_path%\game_character.png game_character.png
 copy %resources_path%\grid_surface.png grid_surface.png
 copy %resources_path%\cartoon.obj cartoon.obj
@@ -43,6 +43,6 @@ popd
 :: Manifest stuff for DPI-awareness
 mt.exe -manifest "VariosTemple.exe.manifest" -outputresource:"%windows_build_path%\VariosTemple.exe;1" -nologo
 
-
-
-
+if "%~1" == "-launch" (
+launch.bat
+)
