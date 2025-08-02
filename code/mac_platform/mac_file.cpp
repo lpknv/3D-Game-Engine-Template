@@ -12,7 +12,7 @@ MacReadEntireFileFromDialog(char *Filename)
     if(FileHandle != NULL)
     {
 		fseek(FileHandle, 0, SEEK_END);
-		u64 FileSize = ftell(FileHandle);
+		uint64_t FileSize = ftell(FileHandle);
         if(FileSize)
         {
         	rewind(FileHandle);
@@ -20,7 +20,7 @@ MacReadEntireFileFromDialog(char *Filename)
 
             if(Result.Contents)
             {
-                u64 BytesRead = fread(Result.Contents, 1, FileSize, FileHandle);
+                uint64_t BytesRead = fread(Result.Contents, 1, FileSize, FileHandle);
                 if(FileSize == BytesRead)
                 {
                     Result.ContentsSize = FileSize;
@@ -78,7 +78,7 @@ MacReadEntireFile(char *Filename)
     NSData *FileData = [[NSFileManager defaultManager] contentsAtPath: Filepath];
   
     Result.Contents = (void *)FileData.bytes;
-    Result.ContentsSize = (u64)FileData.length;
+    Result.ContentsSize = (uint64_t)FileData.length;
 
     return (Result);
 }
@@ -117,11 +117,11 @@ PLATFORM_READ_ENTIRE_FILE(PlatformReadEntireFile)
     return(Result);
 }
 
-b32 MacWriteEntireFile(char *Filename, u64 FileSize, void *Memory)
+int32_t MacWriteEntireFile(char *Filename, uint64_t FileSize, void *Memory)
 {
     NSString *Filepath = [[NSString alloc] initWithCString: Filename encoding: NSUTF8StringEncoding];
     NSData *FileData = [NSData dataWithBytes: Memory length: FileSize];
-    b32 Written = [[NSFileManager defaultManager] createFileAtPath: Filepath
+    int32_t Written = [[NSFileManager defaultManager] createFileAtPath: Filepath
                                                              contents: FileData
                                                            attributes: nil];
 
@@ -130,7 +130,7 @@ b32 MacWriteEntireFile(char *Filename, u64 FileSize, void *Memory)
 
 PLATFORM_WRITE_ENTIRE_FILE(PlatformWriteEntireFile)
 {
-    b32 Result = false;
+    int32_t Result = false;
 
     mac_app_path Path = {};
     MacBuildAppFilePath(&Path);
@@ -169,12 +169,12 @@ PLATFORM_READ_PNG_FILE(PlatformReadPNGFile)
     read_file_result Result = {};
 
     int X,Y,N;
-    u32 *ImageData = (u32 *)stbi_load(SandboxFilename, &X, &Y, &N, 0);
+    uint32_t *ImageData = (uint32_t *)stbi_load(SandboxFilename, &X, &Y, &N, 0);
 
     if (X > 0 && Y > 0 && ImageData != NULL)
     {
         Result.Contents = ImageData;
-        Result.ContentsSize = X*Y*sizeof(u32); 
+        Result.ContentsSize = X*Y*sizeof(uint32_t); 
     }
 
     return Result;

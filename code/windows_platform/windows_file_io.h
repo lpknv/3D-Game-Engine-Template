@@ -8,7 +8,7 @@ PLATFORM_FREE_FILE_MEMORY(PlatformFreeFileMemory)
 
 PLATFORM_WRITE_ENTIRE_FILE(PlatformWriteEntireFile)
 {
-    b32 FileWritten = false;
+    int32_t FileWritten = false;
 
     HANDLE FileHandle = CreateFileA(Filename, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, 0, 0);
 
@@ -39,7 +39,7 @@ PLATFORM_READ_ENTIRE_FILE(PlatformReadEntireFile)
         if (GetFileSizeEx(FileHandle, &FileSize))
         {
             // IMPORTANT: (Ted) This will fail if any file loaded is greater than four gigabytes!
-            u32 FileSize32 = (u32)FileSize.QuadPart;
+            uint32_t FileSize32 = (uint32_t)FileSize.QuadPart;
             void *FileMemory = VirtualAlloc(0, FileSize32, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
 
             DWORD BytesRead = 0;
@@ -48,7 +48,7 @@ PLATFORM_READ_ENTIRE_FILE(PlatformReadEntireFile)
                 BytesRead == FileSize32)
             {
                 Result.Contents = FileMemory;
-                Result.ContentsSize = (u64)FileSize32;
+                Result.ContentsSize = (uint64_t)FileSize32;
                 Result.Filename = (char *)VirtualAlloc(0, 200*sizeof(char), 
                                                        MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
 

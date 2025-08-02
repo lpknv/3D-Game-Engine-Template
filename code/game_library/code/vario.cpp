@@ -45,19 +45,19 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
         CubeMap->CountY = CUBE_COUNT_Y;
         CubeMap->CountZ = CUBE_COUNT_Z;
 
-        for (u32 Layer = 0;
+        for (uint32_t Layer = 0;
              Layer < CubeMap->CountZ;
              Layer++)
         {
-            for (u32 Row = 0;
+            for (uint32_t Row = 0;
                  Row < CubeMap->CountY;
                  Row++)
             {
-                for (u32 Column = 0;
+                for (uint32_t Column = 0;
                      Column < CubeMap->CountX;
                      Column++)
                 {
-                    u32 Value = 0; 
+                    uint32_t Value = 0; 
                     
                     if (Layer == 0)
                     {
@@ -98,7 +98,7 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     if (Input1->Down.EndedDown &&
         GameState->ActionSlopFrames == 0)
     {
-        s32 NextY = GameState->PlayerP.Y - 1;
+        int32_t NextY = GameState->PlayerP.Y - 1;
 
         if (NextY >= 0 && NextY < CubeMap->CountY)
         {
@@ -111,7 +111,7 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     if (Input1->Up.EndedDown &&
         GameState->ActionSlopFrames == 0)
     {
-        s32 NextY = GameState->PlayerP.Y + 1;
+        int32_t NextY = GameState->PlayerP.Y + 1;
 
         if (NextY >= 0 && NextY < CubeMap->CountY)
         {
@@ -124,7 +124,7 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     if (Input1->Left.EndedDown &&
         GameState->ActionSlopFrames == 0)
     {
-        s32 NextX = GameState->PlayerP.X + 1;
+        int32_t NextX = GameState->PlayerP.X + 1;
 
         if (NextX >= 0 && NextX < CubeMap->CountX)
         {
@@ -137,7 +137,7 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     if (Input1->Right.EndedDown &&
         GameState->ActionSlopFrames == 0)
     {
-        s32 NextX = GameState->PlayerP.X - 1;
+        int32_t NextX = GameState->PlayerP.X - 1;
 
         if (NextX >= 0 && NextX < CubeMap->CountX)
         {
@@ -152,9 +152,9 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
         GameState->ActionSlopFrames--;
     }
 
-    local_persist vector_float_3 ModelRotation = { 0.0f, 0.0f, 0.0f };
+    static vector_float_3 ModelRotation = { 0.0f, 0.0f, 0.0f };
 
-    r32 CubeSideInMeters = 200.0f;
+    float CubeSideInMeters = 200.0f;
     vector_float_3 ModelScale = { CubeSideInMeters, CubeSideInMeters, CubeSideInMeters };
 
     push_buffer *ColoredCubePushBuffer = &RenderCommands->ColoredCubePushBuffer;
@@ -163,15 +163,15 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     push_buffer *TexturedCubePushBuffer = &RenderCommands->TexturedCubePushBuffer;
     TexturedCubePushBuffer->DrawCount = 0;
 
-    for (u32 Layer = 0;
+    for (uint32_t Layer = 0;
          Layer < CubeMap->CountZ;
          Layer++)
     {
-        for (u32 Row = 0;
+        for (uint32_t Row = 0;
              Row < CubeMap->CountY;
              Row++)
         {
-            for (u32 Column = 0;
+            for (uint32_t Column = 0;
                  Column < CubeMap->CountX;
                  Column++)
             {
@@ -180,7 +180,7 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
                 Pos.Y = Row;
                 Pos.Z = Layer;
 
-                u32 CubeValue = CubeMap->Cubes[Layer*CubeMap->CountY*CubeMap->CountX + Row*CubeMap->CountX + Column];
+                uint32_t CubeValue = CubeMap->Cubes[Layer*CubeMap->CountY*CubeMap->CountX + Row*CubeMap->CountX + Column];
 
                 if (CubeValue > 0)
                 {
@@ -202,17 +202,17 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 #if WINDOWS
     matrix RotateX = { 1, 0,                            0,                              0,
-                       0, (r32)(cos(ModelRotation.X)),  -(r32)(sin(ModelRotation.X)),   0,
-                       0, (r32)(sin(ModelRotation.X)),  (r32)(cos(ModelRotation.X)),    0,
+                       0, (float)(cos(ModelRotation.X)),  -(float)(sin(ModelRotation.X)),   0,
+                       0, (float)(sin(ModelRotation.X)),  (float)(cos(ModelRotation.X)),    0,
                        0, 0,                            0,                              1 };
 
-    matrix RotateY = { (r32)(cos(ModelRotation.Y)),     0,  (r32)(sin(ModelRotation.Y)),    0,
+    matrix RotateY = { (float)(cos(ModelRotation.Y)),     0,  (float)(sin(ModelRotation.Y)),    0,
                        0,                               1,  0,                              0,                           
-                       -(r32)(sin(ModelRotation.Y)),    0,  (r32)(cos(ModelRotation.Y)),    0,
+                       -(float)(sin(ModelRotation.Y)),    0,  (float)(cos(ModelRotation.Y)),    0,
                        0,                               0,  0,                              1 };
 
-    matrix RotateZ = { (r32)(cos(ModelRotation.Z)), -(r32)(sin(ModelRotation.Z)),   0,  0,
-                       (r32)(sin(ModelRotation.Z)), (r32)(cos(ModelRotation.Z)),    0,  0,
+    matrix RotateZ = { (float)(cos(ModelRotation.Z)), -(float)(sin(ModelRotation.Z)),   0,  0,
+                       (float)(sin(ModelRotation.Z)), (float)(cos(ModelRotation.Z)),    0,  0,
                        0,                           0,                              1,  0,
                        0,                           0,                              0,  1 };
 
@@ -226,23 +226,23 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     matrix_float4x4 
         RotateX = (matrix_float4x4) {{
             { 1, 0,                            0,                            0 },
-            { 0, (r32)(cos(ModelRotation.X)),  -(r32)(sin(ModelRotation.X)), 0 },
-            { 0, (r32)(sin(ModelRotation.X)),  (r32)(cos(ModelRotation.X)),  0 },
+            { 0, (float)(cos(ModelRotation.X)),  -(float)(sin(ModelRotation.X)), 0 },
+            { 0, (float)(sin(ModelRotation.X)),  (float)(cos(ModelRotation.X)),  0 },
             { 0, 0,                            0,                            1 }
         }};
 
     matrix_float4x4 
         RotateY = (matrix_float4x4) {{ 
-            { (r32)(cos(ModelRotation.Y)),     0,  (r32)(sin(ModelRotation.Y)),    0 },
+            { (float)(cos(ModelRotation.Y)),     0,  (float)(sin(ModelRotation.Y)),    0 },
             { 0,                               1,  0,                              0 },
-            { -(r32)(sin(ModelRotation.Y)),    0,  (r32)(cos(ModelRotation.Y)),    0 },
+            { -(float)(sin(ModelRotation.Y)),    0,  (float)(cos(ModelRotation.Y)),    0 },
             { 0,                               0,  0,                              1 },
         }};
 
     matrix_float4x4 
         RotateZ = (matrix_float4x4) {{
-            { (r32)(cos(ModelRotation.Z)), -(r32)(sin(ModelRotation.Z)),   0,  0 },
-            { (r32)(sin(ModelRotation.Z)), (r32)(cos(ModelRotation.Z)),    0,  0 },
+            { (float)(cos(ModelRotation.Z)), -(float)(sin(ModelRotation.Z)),   0,  0 },
+            { (float)(sin(ModelRotation.Z)), (float)(cos(ModelRotation.Z)),    0,  0 },
             { 0,                           0,                              1,  0 },
             { 0,                           0,                              0,  1 },
         }};
@@ -257,46 +257,46 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     matrix_float4x4 View = {};
 #endif
 
-    u32 ViewportWidth = RenderCommands->ViewportWidth;
-    u32 ViewportHeight = RenderCommands->ViewportHeight;
+    uint32_t ViewportWidth = RenderCommands->ViewportWidth;
+    uint32_t ViewportHeight = RenderCommands->ViewportHeight;
 
-    r32 MiddleOfTheWorld = CubeMap->CountX*CubeSideInMeters/2.0f;
+    float MiddleOfTheWorld = CubeMap->CountX*CubeSideInMeters/2.0f;
 
-    r32 EyeX = MiddleOfTheWorld;
+    float EyeX = MiddleOfTheWorld;
 
     // TODO: (Ted)  Those who build on both Mac OS and Windows will notice that this isn't
     //              the same viewing distance on both platforms. This will need to change.
     //
     //              I think it depends more on the Viewport Width / Viewport Height than
     //              I previously thought.
-    vector_float_3 Eye = { EyeX,  (r32)(-0.5*MiddleOfTheWorld), (r32)(1.5*MiddleOfTheWorld) };
+    vector_float_3 Eye = { EyeX,  (float)(-0.5*MiddleOfTheWorld), (float)(1.5*MiddleOfTheWorld) };
     vector_float_3 Up = {  0.0f,  0.0f,  1.0f };
 
-    r32 Near = 1000.0f;
-    r32 Far = 10000.0f;
+    float Near = 1000.0f;
+    float Far = 10000.0f;
 
-    b32 RotateCamera = false;
+    int32_t RotateCamera = true;
 
     if (RotateCamera)
     {
-        local_persist r32 CameraRotation = 0.0f;
+        static float CameraRotation = 0.0f;
         CameraRotation += 0.010f;
 
 #if WINDOWS
-        matrix CameraRotateZ = { (r32)(cos(CameraRotation)), -(r32)(sin(CameraRotation)),   0,  0,
-                                 (r32)(sin(CameraRotation)), (r32)(cos(CameraRotation)),    0,  0,
+        matrix CameraRotateZ = { (float)(cos(CameraRotation)), -(float)(sin(CameraRotation)),   0,  0,
+                                 (float)(sin(CameraRotation)), (float)(cos(CameraRotation)),    0,  0,
                                  0,                           0,                            1,  0,
                                  0,                           0,                            0,  1 };
 #elif MACOS
         matrix_float4x4 CameraRotateZ = (matrix_float4x4) {{
-            { (r32)(cos(CameraRotation)), -(r32)(sin(CameraRotation)),   0,  0 },
-            { (r32)(sin(CameraRotation)), (r32)(cos(CameraRotation)),    0,  0 },
+            { (float)(cos(CameraRotation)), -(float)(sin(CameraRotation)),   0,  0 },
+            { (float)(sin(CameraRotation)), (float)(cos(CameraRotation)),    0,  0 },
             { 0,                           0,                            1,  0 },
             { 0,                           0,                            0,  1 },
         }};
 #endif
 
-        r32 CameraRotationAxisOrigin = MiddleOfTheWorld;
+        float CameraRotationAxisOrigin = MiddleOfTheWorld;
 
 #if WINDOWS
         matrix CameraTranslate = { 1,                           0,                          0,                  0,
@@ -348,7 +348,7 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
     mesh_instance_buffer *FlatColorMeshInstanceBuffer = &RenderCommands->FlatColorMeshInstances;
 
-    for (u32 InstanceIndex = 0;
+    for (uint32_t InstanceIndex = 0;
          InstanceIndex < ColoredCubePushBuffer->DrawCount;
          InstanceIndex++)
     {
@@ -365,9 +365,9 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
         Uniforms->Transform = matrix_multiply(Translate, Scale);
 #endif
 
-        u32 CubeValue = GameState->CubeMap.Cubes[InstanceIndex];
+        uint32_t CubeValue = GameState->CubeMap.Cubes[InstanceIndex];
 
-        u32 ModelIndex = 0;
+        uint32_t ModelIndex = 0;
 
         if (CubeValue == 2)
         {
@@ -384,7 +384,7 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
     mesh_instance_buffer *TexturedMeshInstanceBuffer = &RenderCommands->TexturedMeshInstances;
 
-    for (u32 InstanceIndex = 0;
+    for (uint32_t InstanceIndex = 0;
          InstanceIndex < TexturedCubePushBuffer->DrawCount;
          InstanceIndex++)
     {
@@ -414,7 +414,7 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
         mesh_instance *MeshInstance = &LoadedModelMeshInstanceBuffer->Meshes[0];
 #if WINDOWS
         matrix Translate = GenerateTranslationMatrix(Translation);
-        matrix RotateX = GenerateXRotationMatrix((r32)(M_PI*1.5));
+        matrix RotateX = GenerateXRotationMatrix((float)(M_PI*3.5));
         matrix LoadedModelScale = GenerateScaleMatrix(PersonScale);
 
         SetupMeshConstants(&MeshInstance->Constants, RotateX, RotateY, RotateZ,

@@ -1,7 +1,7 @@
 
 void
 TransferVertexBufferContents(ID3D11DeviceContext* DeviceContext, ID3D11Buffer* D3DVertexBuffer, 
-                             void *GameVertexBuffer, u32 VertexBufferSize)
+                             void *GameVertexBuffer, uint32_t VertexBufferSize)
 {
     D3D11_MAPPED_SUBRESOURCE Mapped;
     HRESULT HR = DeviceContext->Map((ID3D11Resource*)D3DVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &Mapped);

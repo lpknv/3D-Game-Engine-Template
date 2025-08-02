@@ -32,7 +32,7 @@ vector_float_3 SubtractVector3(vector_float_3 LeftHandSide, vector_float_3 Right
 
 vector_float_3 Normalize(vector_float_3 Vector)
 {
-    r32 Magnitude = sqrt((Vector.X*Vector.X) + (Vector.Y*Vector.Y) + (Vector.Z*Vector.Z));
+    float Magnitude = sqrt((Vector.X*Vector.X) + (Vector.Y*Vector.Y) + (Vector.Z*Vector.Z));
     vector_float_3 Result = {};
     Result.X = Vector.X/Magnitude;
     Result.Y = Vector.Y/Magnitude;
@@ -49,7 +49,7 @@ vector_float_3 CrossProduct(vector_float_3 A, vector_float_3 B)
     return (Result);
 }
 
-r32 DotProduct(vector_float_3 A, vector_float_3 B)
+float DotProduct(vector_float_3 A, vector_float_3 B)
 {
     return (A.X*B.X + A.Y*B.Y + A.Z*B.Z);
 }

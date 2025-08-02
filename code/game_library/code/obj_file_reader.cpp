@@ -1,8 +1,8 @@
 
-r32
+float
 RealDigitFromTextCharacter(char Character)
 {
-    r32 Digit = 0.0f;
+    float Digit = 0.0f;
 
     if (Character == '1')
     {
@@ -44,10 +44,10 @@ RealDigitFromTextCharacter(char Character)
     return Digit;
 }
 
-u32
+uint32_t
 UnsignedDigitFromTextCharacter(char Character)
 {
-    u32 Digit = 0;
+    uint32_t Digit = 0;
 
     if(Character == '1')
     {
@@ -91,7 +91,7 @@ UnsignedDigitFromTextCharacter(char Character)
 
 struct obj_scan_result
 {
-    r32 Value;
+    float Value;
     char *AdvancedScan;
 };
 
@@ -99,15 +99,15 @@ struct obj_scan_result
 //              right after the floating point value. It effectively
 //              "consumes" the floating point value.
 obj_scan_result
-ConstructFloatFromScan(char *Scan, u32 SignificantDigits)
+ConstructFloatFromScan(char *Scan, uint32_t SignificantDigits)
 {
     obj_scan_result Result = {};
-    r32 VertexValue = 0.0f;
+    float VertexValue = 0.0f;
 
     char First = *Scan++;
-    b32 IsNegative = false;
+    int32_t IsNegative = false;
 
-    r32 TensDigit = 0.0f;
+    float TensDigit = 0.0f;
 
     if (First == '-')
     {
@@ -124,29 +124,29 @@ ConstructFloatFromScan(char *Scan, u32 SignificantDigits)
 
     Scan++;
     char TenthsPlace = *Scan++;
-    r32 TenthsDigit = RealDigitFromTextCharacter(TenthsPlace);
+    float TenthsDigit = RealDigitFromTextCharacter(TenthsPlace);
     VertexValue += TenthsDigit*0.1f;
 
     char HundredthsPlace = *Scan++;
-    r32 HundredthsDigit = RealDigitFromTextCharacter(HundredthsPlace);
+    float HundredthsDigit = RealDigitFromTextCharacter(HundredthsPlace);
     VertexValue += HundredthsDigit*0.01f;
 
     char ThousandthsPlace = *Scan++;
-    r32 ThousandthsDigit = RealDigitFromTextCharacter(ThousandthsPlace);
+    float ThousandthsDigit = RealDigitFromTextCharacter(ThousandthsPlace);
     VertexValue += ThousandthsDigit*0.001f;
 
     char TenThousandthsPlace = *Scan++;
-    r32 TenThousandthsDigit = RealDigitFromTextCharacter(TenThousandthsPlace);
+    float TenThousandthsDigit = RealDigitFromTextCharacter(TenThousandthsPlace);
     VertexValue += TenThousandthsDigit*0.0001f;
 
     if (SignificantDigits > 4)
     {
         char HundredThousandthsPlace = *Scan++;
-        r32 HundredThousandthsDigit = RealDigitFromTextCharacter(HundredThousandthsPlace);
+        float HundredThousandthsDigit = RealDigitFromTextCharacter(HundredThousandthsPlace);
         VertexValue += HundredThousandthsDigit*0.00001f;
 
         char MillionthsPlace = *Scan++;
-        r32 MillionthsDigit = RealDigitFromTextCharacter(MillionthsPlace);
+        float MillionthsDigit = RealDigitFromTextCharacter(MillionthsPlace);
         VertexValue += MillionthsDigit*0.000001f;
     }
 
@@ -171,14 +171,14 @@ ConstructFloatFromScan(char *Scan, u32 SignificantDigits)
 char*
 ScanToLineStartingWithCharacter(char StartCharacter, char *Scan, char *Line)
 {
-    b32 Scanning = true;
+    int32_t Scanning = true;
 
 #if WINDOWS
     char NewLineToken = '\r';
-    u32 CharactersToNextLineAfterNewLineToken = 2;
+    uint32_t CharactersToNextLineAfterNewLineToken = 2;
 #elif MACOS
     char NewLineToken = '\n';
-    u32 CharactersToNextLineAfterNewLineToken = 1;
+    uint32_t CharactersToNextLineAfterNewLineToken = 1;
 #endif
 
     while(Scanning)
@@ -208,14 +208,14 @@ ScanToLineStartingWithCharacter(char StartCharacter, char *Scan, char *Line)
     return Scan;
 }
 
-u32
-GetFaceLookupIndexFromCharacters(char *Characters, u32 CharacterCount)
+uint32_t
+GetFaceLookupIndexFromCharacters(char *Characters, uint32_t CharacterCount)
 {
-    u32 FaceLookupIndex = 0;
-    u32 OnesDigit = 0;
-    u32 TensDigit = 0;
-    u32 HundredsDigit = 0;
-    u32 ThousandsDigit = 0;
+    uint32_t FaceLookupIndex = 0;
+    uint32_t OnesDigit = 0;
+    uint32_t TensDigit = 0;
+    uint32_t HundredsDigit = 0;
+    uint32_t ThousandsDigit = 0;
 
     if(CharacterCount == 1)
     {
@@ -254,7 +254,7 @@ GetFaceLookupIndexFromCharacters(char *Characters, u32 CharacterCount)
 
 struct obj_face_scan
 {
-    u32 CharacterCount;
+    uint32_t CharacterCount;
     char Characters[4];
     char *AdvancedScan;
 };
@@ -263,7 +263,7 @@ obj_face_scan
 GetFaceCharactersUpToToken(char *Scan, char Token)
 {
     obj_face_scan Result = {};
-    u32 CharacterCount = 0;
+    uint32_t CharacterCount = 0;
 
     while(*Scan != Token)
     {

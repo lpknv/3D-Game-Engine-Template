@@ -23,43 +23,43 @@ const unsigned short YKeyCode = 0x10;
 
 struct mac_game_controller
 {
-    s32 LeftThumbXUsageID;
-    s32 LeftThumbYUsageID;
-    s32 ButtonAUsageID;
-    s32 ButtonBUsageID;
-    s32 ButtonXUsageID;
-    s32 ButtonYUsageID;
+    int32_t LeftThumbXUsageID;
+    int32_t LeftThumbYUsageID;
+    int32_t ButtonAUsageID;
+    int32_t ButtonBUsageID;
+    int32_t ButtonXUsageID;
+    int32_t ButtonYUsageID;
 
-    s32 ButtonLeftShoulder1UsageID;
-    s32 ButtonRightShoulder1UsageID;
+    int32_t ButtonLeftShoulder1UsageID;
+    int32_t ButtonRightShoulder1UsageID;
 
-    s32 ButtonLeftShoulder2UsageID;
-    s32 ButtonRightShoulder2UsageID;
+    int32_t ButtonLeftShoulder2UsageID;
+    int32_t ButtonRightShoulder2UsageID;
     
-    s32 ButtonStartUsageID;
-    s32 ButtonSelectUsageID;
+    int32_t ButtonStartUsageID;
+    int32_t ButtonSelectUsageID;
 
     // Values
-    r32 LeftThumbstickX;
-    r32 LeftThumbstickY;
-    b32 UsesHatSwitch;
+    float LeftThumbstickX;
+    float LeftThumbstickY;
+    int32_t UsesHatSwitch;
 
-    s32 DPadX;
-    s32 DPadY;
+    int32_t DPadX;
+    int32_t DPadY;
 
-    b32 ButtonAState;
-    b32 ButtonBState;
-    b32 ButtonXState;
-    b32 ButtonYState;
+    int32_t ButtonAState;
+    int32_t ButtonBState;
+    int32_t ButtonXState;
+    int32_t ButtonYState;
 
-    b32 ButtonLeftShoulder1State;
-    b32 ButtonRightShoulder1State;
+    int32_t ButtonLeftShoulder1State;
+    int32_t ButtonRightShoulder1State;
 
-    b32 ButtonLeftShoulder2State;
-    b32 ButtonRightShoulder2State;
+    int32_t ButtonLeftShoulder2State;
+    int32_t ButtonRightShoulder2State;
 
-    b32 ButtonStartState;
-    b32 ButtonSelectState;
+    int32_t ButtonStartState;
+    int32_t ButtonSelectState;
 };
 
 struct mac_replay_buffer
@@ -72,7 +72,7 @@ struct mac_replay_buffer
 struct mac_state
 {
     void *GameMemoryBlock;
-    u64 PermanentStorageSize;
+    uint64_t PermanentStorageSize;
 
     mac_replay_buffer ReplayBuffers[4];
 
@@ -100,5 +100,5 @@ struct mac_game_code
     game_load_textures *LoadTextures;
     game_setup_memory_partitions *SetupMemoryPartitions;
     game_clear_memory_arena *ClearMemoryArena;
-    b32 IsValid;
+    int32_t IsValid;
 };

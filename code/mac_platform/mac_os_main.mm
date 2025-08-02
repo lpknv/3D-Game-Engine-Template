@@ -27,9 +27,9 @@
 #include "mac_recording.h"
 #include "mac_game_controller.h"
 
-global_variable b32 LKeyWasPressed = false;
-global_variable b32 MouseCursorHideAllowed = true;
-global_variable b32 ExternalMouseCursorFlag = false;
+static int32_t LKeyWasPressed = false;
+static int32_t MouseCursorHideAllowed = true;
+static int32_t ExternalMouseCursorFlag = false;
 
 @interface GameWindow: NSWindow
 -(void) setMacKeyboardControllerPtr:(mac_game_controller *)MacKeyboardControllerPtr;
@@ -268,13 +268,13 @@ static const size_t kAlignedInstanceUniformsSize = (sizeof(instance_uniforms) & 
 
     game_render_commands *RenderCommandsPtr = &_RenderCommands;
 
-    u32 InstanceUniformBufferOffset = kAlignedInstanceUniformsSize*_currentFrameIndex*RenderCommandsPtr->FlatColorMeshInstances.MeshMax;
-    void *InstanceUniformBufferAddress = ((u8 *)[self InstanceUniformBuffer].contents) + InstanceUniformBufferOffset;
+    uint32_t InstanceUniformBufferOffset = kAlignedInstanceUniformsSize*_currentFrameIndex*RenderCommandsPtr->FlatColorMeshInstances.MeshMax;
+    void *InstanceUniformBufferAddress = ((uint8_t *)[self InstanceUniformBuffer].contents) + InstanceUniformBufferOffset;
 
-    u32 UniformBufferOffset = kAlignedUniformsSize*_currentFrameIndex;
-    void *UniformBufferAddress = ((u8 *)[self ConstantUniformBuffer].contents) + UniformBufferOffset;
+    uint32_t UniformBufferOffset = kAlignedUniformsSize*_currentFrameIndex;
+    void *UniformBufferAddress = ((uint8_t *)[self ConstantUniformBuffer].contents) + UniformBufferOffset;
 
-    RenderCommandsPtr->FrameIndex = (u32)_currentFrameIndex;
+    RenderCommandsPtr->FrameIndex = (uint32_t)_currentFrameIndex;
 
     game_memory *GameMemoryPtr = &_GameMemory;
     mac_state MacState = *_MacStatePtr;
@@ -355,10 +355,10 @@ static const size_t kAlignedInstanceUniformsSize = (sizeof(instance_uniforms) & 
                                      &(NewController->Select),
                                      MacController->ButtonSelectState); 
 
-    b32 Right = MacController->DPadX > 0 ? true:false;
-    b32 Left = MacController->DPadX < 0 ? true:false;
-    b32 Up = MacController->DPadY > 0 ? true:false;
-    b32 Down = MacController->DPadY < 0 ? true:false;
+    int32_t Right = MacController->DPadX > 0 ? true:false;
+    int32_t Left = MacController->DPadX < 0 ? true:false;
+    int32_t Up = MacController->DPadY > 0 ? true:false;
+    int32_t Down = MacController->DPadY < 0 ? true:false;
 
     MacProcessGameControllerButton(&(OldController->Right),
                                    &(NewController->Right),
@@ -407,7 +407,7 @@ static const size_t kAlignedInstanceUniformsSize = (sizeof(instance_uniforms) & 
     CGFloat BackingScaleFactor = [[NSScreen mainScreen] backingScaleFactor];
     NSUInteger Width = (NSUInteger)(RenderCommandsPtr->ViewportWidth*BackingScaleFactor);
     NSUInteger Height = (NSUInteger)(RenderCommandsPtr->ViewportHeight*BackingScaleFactor);
-    MTLViewport Viewport = (MTLViewport){0.0, 0.0, (r64)Width, (r64)Height, -1.0, 1.0 };
+    MTLViewport Viewport = (MTLViewport){0.0, 0.0, (double)Width, (double)Height, -1.0, 1.0 };
 
     @autoreleasepool 
     {
@@ -420,8 +420,8 @@ static const size_t kAlignedInstanceUniformsSize = (sizeof(instance_uniforms) & 
                                                           ClearColor.RGBA[3]);
         RenderPassDescriptor.colorAttachments[0].clearColor = MetalClearColor;
 
-        vector_uint2 ViewportSize = { (u32)RenderCommandsPtr->ViewportWidth, 
-                                      (u32)RenderCommandsPtr->ViewportHeight };
+        vector_uint2 ViewportSize = { (uint32_t)RenderCommandsPtr->ViewportWidth, 
+                                      (uint32_t)RenderCommandsPtr->ViewportHeight };
 
         id<MTLRenderCommandEncoder> RenderEncoder = 
             [CommandBuffer renderCommandEncoderWithDescriptor: RenderPassDescriptor];
@@ -453,7 +453,7 @@ static const size_t kAlignedInstanceUniformsSize = (sizeof(instance_uniforms) & 
 
         instance_uniforms *InstanceUniforms = (instance_uniforms *)InstanceUniformBufferAddress;
 
-        for (u32 Index = 0;
+        for (uint32_t Index = 0;
              Index < MeshBuffer->MeshCount;
              Index++)
         {
@@ -468,7 +468,7 @@ static const size_t kAlignedInstanceUniformsSize = (sizeof(instance_uniforms) & 
                              baseInstance: Index];
         }
 
-        u32 BaseIndex = MeshBuffer->MeshCount;
+        uint32_t BaseIndex = MeshBuffer->MeshCount;
 
         [RenderEncoder setRenderPipelineState: [self TexturePipelineState]];
         [RenderEncoder setVertexBuffer: [self TextureVertexBuffer] 
@@ -482,7 +482,7 @@ static const size_t kAlignedInstanceUniformsSize = (sizeof(instance_uniforms) & 
         MeshBuffer = &RenderCommandsPtr->TexturedMeshInstances;
         game_vertex_buffer *TextureVertexBuffer = &RenderCommandsPtr->TextureVertexBuffer;
 
-        for (u32 Index = 0;
+        for (uint32_t Index = 0;
              Index < MeshBuffer->MeshCount;
              Index++)
         {
@@ -544,7 +544,7 @@ static const size_t kAlignedInstanceUniformsSize = (sizeof(instance_uniforms) & 
 
 @end
 
-global_variable GameWindow *Window;
+static GameWindow *Window;
 
 int main(int argc, const char * argv[]) 
 {
@@ -568,8 +568,8 @@ int main(int argc, const char * argv[])
 
     NSRect ScreenRect = [[NSScreen mainScreen] frame];
 
-    r32 GlobalRenderWidth = (r32)ScreenRect.size.width;
-    r32 GlobalRenderHeight = (r32)ScreenRect.size.height;
+    float GlobalRenderWidth = (float)ScreenRect.size.width;
+    float GlobalRenderHeight = (float)ScreenRect.size.height;
 
     NSRect InitialFrame = NSMakeRect(0, 0, GlobalRenderWidth, GlobalRenderHeight);
   
@@ -610,10 +610,10 @@ int main(int argc, const char * argv[])
     RenderCommands.ViewportWidth = (int)GlobalRenderWidth;
     RenderCommands.ViewportHeight = (int)GlobalRenderHeight;
     RenderCommands.FrameIndex = 0;
-    RenderCommands.ScreenScaleFactor = (r32)([[NSScreen mainScreen] backingScaleFactor]);
+    RenderCommands.ScreenScaleFactor = (float)([[NSScreen mainScreen] backingScaleFactor]);
 
-    u32 PageSize = getpagesize();
-    u32 VertexBufferSize = PageSize*2000;
+    uint32_t PageSize = getpagesize();
+    uint32_t VertexBufferSize = PageSize*2000;
 
     RenderCommands.FlatColorVertexBuffer.Vertices = mmap(0, VertexBufferSize,
                                                          PROT_READ | PROT_WRITE,
@@ -649,7 +649,7 @@ int main(int argc, const char * argv[])
                                                                      options: MTLResourceStorageModeShared
                                                                  deallocator: nil];
 
-    u32 IndexBufferSize = PageSize*2000;
+    uint32_t IndexBufferSize = PageSize*2000;
     RenderCommands.LoadedModelVertexBuffer.VertexCount = 0;
     RenderCommands.LoadedModelVertexBuffer.Indices = mmap(0, IndexBufferSize,
                                                           PROT_READ | PROT_WRITE,
@@ -662,19 +662,19 @@ int main(int argc, const char * argv[])
                                                              options: MTLResourceStorageModeShared
                                                          deallocator: nil];
 
-    u32 InstancedMeshBufferSize = 200;
+    uint32_t InstancedMeshBufferSize = 200;
     RenderCommands.FlatColorMeshInstances.MeshMax = InstancedMeshBufferSize;
     RenderCommands.FlatColorMeshInstances.MeshCount = 0;
     RenderCommands.FlatColorMeshInstances.Meshes = (mesh_instance *)malloc(InstancedMeshBufferSize*sizeof(mesh_instance));
 
-    u32 ConstantUniformBufferSize = kAlignedUniformsSize*kMaxInflightBuffers;
+    uint32_t ConstantUniformBufferSize = kAlignedUniformsSize*kMaxInflightBuffers;
     id <MTLBuffer> ConstantUniformBuffer = [MetalKitView.device newBufferWithLength: ConstantUniformBufferSize
                                                                             options: MTLResourceStorageModeShared];
     ConstantUniformBuffer.label = @"Constant Uniform Buffer";
 
     // TODO: (Ted)   Later on this, this will need to be the size of all instanced mesh buffers combined.
-    u32 InstanceMeshesSize = RenderCommands.FlatColorMeshInstances.MeshMax;
-    u32 InstanceUniformBufferSize = kAlignedInstanceUniformsSize * kMaxInflightBuffers * InstanceMeshesSize;
+    uint32_t InstanceMeshesSize = RenderCommands.FlatColorMeshInstances.MeshMax;
+    uint32_t InstanceUniformBufferSize = kAlignedInstanceUniformsSize * kMaxInflightBuffers * InstanceMeshesSize;
     id <MTLBuffer> InstanceUniformBuffer = [MetalKitView.device newBufferWithLength: InstanceUniformBufferSize
                                                                             options: MTLResourceStorageModeShared];
     InstanceUniformBuffer.label = @"Instance Uniform Buffer";
@@ -745,10 +745,10 @@ int main(int argc, const char * argv[])
 
 #if INTERNAL
     char* BaseAddress = (char*)Gigabytes(8);
-    u32 AllocationFlags = MAP_PRIVATE | MAP_ANON | MAP_FIXED;
+    uint32_t AllocationFlags = MAP_PRIVATE | MAP_ANON | MAP_FIXED;
 #else
     void* BaseAddress = 0;
-    u32 AllocationFlags = MAP_PRIVATE | MAP_ANON;
+    uint32_t AllocationFlags = MAP_PRIVATE | MAP_ANON;
 #endif
 
     MetalViewDelegate *ViewDelegate = [[MetalViewDelegate alloc] init];
@@ -778,7 +778,7 @@ int main(int argc, const char * argv[])
                      format: @"Failed to allocate permanent storage"];
     }
 
-    u8* TransientStorageAddress = ((u8*)GameMemory.PermanentStorage + GameMemory.PermanentStorageSize);
+    uint8_t* TransientStorageAddress = ((uint8_t*)GameMemory.PermanentStorage + GameMemory.PermanentStorageSize);
     GameMemory.TransientStorage = mmap(TransientStorageAddress,
                                        GameMemory.TransientStorageSize,
                                        PROT_READ | PROT_WRITE,
@@ -881,13 +881,13 @@ int main(int argc, const char * argv[])
 
     NSMutableArray *MetalTextures = [[NSMutableArray alloc] init];
 
-    for (u32 Index = 0;
+    for (uint32_t Index = 0;
          Index < TextureBuffer.Count;
          Index++)
     {
         game_texture *Texture = &TextureBuffer.Textures[Index];
-        u32 TextureWidth = Texture->Width;
-        u32 TextureHeight = Texture->Height;
+        uint32_t TextureWidth = Texture->Width;
+        uint32_t TextureHeight = Texture->Height;
 
         MTLTextureDescriptor *TextureDescriptor = [[MTLTextureDescriptor alloc] init];
         TextureDescriptor.pixelFormat = MTLPixelFormatRGBA8Unorm;

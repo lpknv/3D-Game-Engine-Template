@@ -32,7 +32,7 @@ SetupShaderResourceView(ID3D11Device* D11Device, game_texture *Texture)
 }
 
 internal ID3D11Buffer*
-SetupVertexBufferFromGameVertexBuffer(ID3D11Device* D11Device, u32 VertexBufferSize, 
+SetupVertexBufferFromGameVertexBuffer(ID3D11Device* D11Device, uint32_t VertexBufferSize, 
                                       void *GameVertexBuffer)
 {
     ID3D11Buffer* VertexBuffer;

@@ -1,9 +1,11 @@
 @echo off
 
-set optimizer_flags= -Zi 
+
+set optimizer_flags= -Zi
 
 if "%~1" == "-release" (
 set optimizer_flags= -O2 -DNDEBUG=1
+launch.bat
 )
 
 set ignored_warnings=-wd4805 -wd4244 -wd4018 -wd4838 -wd4700
@@ -12,6 +14,8 @@ set resources_path=..\..\resources
 set included_libraries=user32.lib d3d11.lib gdi32.lib dxguid.lib ole32.lib dwmapi.lib 
 set sdl_library_path=C:/SDL2-2.0.16
 set sdl_dll_path=.\resources\SDL2.dll
+
+rmdir /s /q %windows_build_path%
 
 :: Compile the game's shaders
 fxc.exe /nologo /T vs_5_0 /E vs /O3 /WX /Zpc /Ges /Fh d3d11_vshader_flat.h /Vn d3d11_vshader_flat^

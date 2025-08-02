@@ -1,16 +1,16 @@
 
 struct game_texture_description
 {
-    u32 Width;
-    u32 Height;
+    uint32_t Width;
+    uint32_t Height;
     char *Filename;
 };
 
-internal b32
+internal int32_t
 LoadTexture(game_memory *Memory, memory_arena *Arena, thread_context *Thread,
             game_texture *Texture, game_texture_description Description)
 {
-    b32 LoadedTexture = false;
+    int32_t LoadedTexture = false;
 
 #if WINDOWS
     read_file_result Result = PlatformReadPNGFile(Description.Filename);
@@ -22,13 +22,13 @@ LoadTexture(game_memory *Memory, memory_arena *Arena, thread_context *Thread,
     {
         Texture->Width = Description.Width;
         Texture->Height = Description.Height;
-        u32 PixelCount = Texture->Width*Texture->Height;
+        uint32_t PixelCount = Texture->Width*Texture->Height;
 
-        Texture->Data = PushArray(Arena, PixelCount, u32);
-        u8 *Src = (u8 *)Result.Contents;
-        u8 *Dest = (u8 *)Texture->Data;
+        Texture->Data = PushArray(Arena, PixelCount, uint32_t);
+        uint8_t *Src = (uint8_t *)Result.Contents;
+        uint8_t *Dest = (uint8_t *)Texture->Data;
 
-        for(u32 ByteIndex = 0;
+        for(uint32_t ByteIndex = 0;
             ByteIndex < Result.ContentsSize;
             ByteIndex++)
         {
@@ -64,7 +64,7 @@ GAME_LOAD_TEXTURES(GameLoadTextures)
     Descriptions[1].Height = 16;
     Descriptions[1].Filename = "grid_surface.png";
 
-    for (u32 Index = 0;
+    for (uint32_t Index = 0;
          Index < TextureBuffer->Max;
          Index++)
     {

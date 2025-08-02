@@ -2,7 +2,7 @@
 struct game_button_state 
 {
     int HalfTransitionCount;
-    b32 EndedDown;
+    int32_t EndedDown;
 };
 
 struct game_controller_input 
@@ -33,8 +33,8 @@ struct game_controller_input
 struct game_input 
 {
     game_button_state MouseButtons[5];
-    s32 MouseX, MouseY, MouseZ;
-    r32 dtForFrame;
+    int32_t MouseX, MouseY, MouseZ;
+    float dtForFrame;
     game_controller_input Controller;
-    r32 FrameRateMultiplier;
+    float FrameRateMultiplier;
 };

@@ -2,7 +2,7 @@
 // NOTE: (Ted)  A cube map position is defined by having bounds with -0.5, 0.5 on all three axes.
 struct cube_map_position
 {
-    s32 X, Y, Z;
+    int32_t X, Y, Z;
     vector_float_3 Offset;
 };
 
@@ -14,9 +14,9 @@ struct cube_map_position
 
 struct cube_map
 {
-    u32 Cubes[CUBE_MAP_SIZE];
+    uint32_t Cubes[CUBE_MAP_SIZE];
     
-    u32 CountX;
-    u32 CountY;
-    u32 CountZ;
+    uint32_t CountX;
+    uint32_t CountY;
+    uint32_t CountZ;
 };

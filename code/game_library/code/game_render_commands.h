@@ -10,17 +10,17 @@ struct game_constants
 
 struct game_flat_color_vertex
 {
-    r32 Position[3];
-    r32 Normal[3];
-    r32 Color[3];
+    float Position[3];
+    float Normal[3];
+    float Color[3];
 };
 
 // TODO: (Ted)  See if there is a way to simplify this on Windows
 struct game_texture_vertex
 {
-    r32 Position[3];
-    r32 Normal[3];
-    r32 UV[2];
+    float Position[3];
+    float Normal[3];
+    float UV[2];
 };
 
 #elif MACOS
@@ -57,40 +57,40 @@ struct game_texture_vertex
 
 struct model_range
 {
-    u32 StartVertex;
-    u32 VertexCount;
+    uint32_t StartVertex;
+    uint32_t VertexCount;
 };
 
 struct model_range_indexed
 {
-    u32 StartIndex;
-    u32 IndexCount;
+    uint32_t StartIndex;
+    uint32_t IndexCount;
 };
 
 struct game_vertex_buffer
 {
     void *Vertices;
-    u32 VertexCount;
+    uint32_t VertexCount;
 
     model_range ModelRanges[MAX_MODELS];
-    u32 ModelCount;
+    uint32_t ModelCount;
 };
 
 struct game_indexed_vertex_buffer
 {
     void *Vertices;
-    u32 VertexCount;
+    uint32_t VertexCount;
 
     void *Indices;
-    u32 IndexCount;
+    uint32_t IndexCount;
 
     // TODO: (Ted)  Clearly this will need some notion of multiple models.
-    r32 ModelHeight;
+    float ModelHeight;
 };
 
 struct clear_color
 {
-    r32 RGBA[4];
+    float RGBA[4];
 };
 
 struct mesh_instance
@@ -100,33 +100,33 @@ struct mesh_instance
 #elif MACOS
     instance_uniforms Uniforms;
 #endif
-    u32 ModelIndex;
+    uint32_t ModelIndex;
 };
 
 struct mesh_instance_buffer
 {
     mesh_instance *Meshes;
-    u32 MeshCount;
-    u32 MeshMax;
+    uint32_t MeshCount;
+    uint32_t MeshMax;
 };
 
 struct push_buffer
 {
     vector_float_3 Translations[CUBE_MAP_SIZE];
-    u32 DrawCount;
+    uint32_t DrawCount;
 };
 
 struct game_render_commands
 {
 
 #if MACOS
-    u32 FrameIndex;
-    r32 ScreenScaleFactor; 
+    uint32_t FrameIndex;
+    float ScreenScaleFactor; 
     game_constants Constants;
 #endif
 
-    s32 ViewportWidth;
-    s32 ViewportHeight;
+    int32_t ViewportWidth;
+    int32_t ViewportHeight;
     clear_color ClearColor;
 
     game_vertex_buffer FlatColorVertexBuffer;

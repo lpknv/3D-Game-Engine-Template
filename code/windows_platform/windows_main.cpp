@@ -37,12 +37,12 @@ PLATFORM_READ_PNG_FILE(PlatformReadPNGFile)
     read_file_result Result = {};
 
     int X,Y,N;
-    u32 *ImageData = (u32 *)stbi_load(Filename, &X, &Y, &N, 0);
+    uint32_t *ImageData = (uint32_t *)stbi_load(Filename, &X, &Y, &N, 0);
 
     if (X > 0 && Y > 0 && ImageData != NULL)
     {
         Result.Contents = ImageData;
-        Result.ContentsSize = X*Y*sizeof(u32); 
+        Result.ContentsSize = X*Y*sizeof(uint32_t); 
     }
 
     return Result;
@@ -124,7 +124,7 @@ void CALLBACK MessageFiberProc(void *)
             MSG Message;
             while (PeekMessage(&Message, 0, 0, 0, PM_REMOVE)) 
             {
-                u32 WMessage = Message.message;
+                uint32_t WMessage = Message.message;
 
                 game_controller_input *KeyboardController = &Input.Controller;
 
@@ -139,7 +139,7 @@ void CALLBACK MessageFiberProc(void *)
 
                 } else if (WMessage == WM_KEYDOWN)
                 {
-                    u32 VirtualKeyCode = Message.wParam;
+                    uint32_t VirtualKeyCode = Message.wParam;
 
                     if (VirtualKeyCode == VK_RIGHT)
                     {
@@ -175,7 +175,7 @@ void CALLBACK MessageFiberProc(void *)
 
                 } else if (WMessage == WM_KEYUP)
                 {
-                    u32 VirtualKeyCode = Message.wParam;
+                    uint32_t VirtualKeyCode = Message.wParam;
 
                     if (VirtualKeyCode == VK_RIGHT)
                     {
@@ -222,15 +222,15 @@ void CALLBACK MessageFiberProc(void *)
     }
 }
 
-global_variable ID3D11Buffer *WindowsFlatColorVertexBuffer;
-global_variable ID3D11Buffer *WindowsTextureVertexBuffer;
-global_variable ID3D11Buffer *WindowsLoadedModelVertexBuffer;
+static ID3D11Buffer *WindowsFlatColorVertexBuffer;
+static ID3D11Buffer *WindowsTextureVertexBuffer;
+static ID3D11Buffer *WindowsLoadedModelVertexBuffer;
 
 internal
 void DrawMeshesFromInstanceBuffer(ID3D11DeviceContext *DeviceContext, ID3D11Buffer *ConstantsBuffer,
                                   mesh_instance_buffer *MeshBuffer, game_vertex_buffer *VertexBuffer)
 {
-    for (u32 Index = 0;
+    for (uint32_t Index = 0;
          Index < MeshBuffer->MeshCount;
          Index++)
     {
@@ -251,7 +251,7 @@ void DrawMeshesFromInstanceBuffer(ID3D11DeviceContext *DeviceContext, ID3D11Buff
 }
 
 internal void
-InitializeMeshInstanceBufferWindows(mesh_instance_buffer *InstanceBuffer, u32 MaxMeshes)
+InitializeMeshInstanceBufferWindows(mesh_instance_buffer *InstanceBuffer, uint32_t MaxMeshes)
 {
     InstanceBuffer->MeshCount = 0;
     InstanceBuffer->MeshMax = MaxMeshes;
@@ -260,7 +260,7 @@ InitializeMeshInstanceBufferWindows(mesh_instance_buffer *InstanceBuffer, u32 Ma
 }
 
 #define MAX_SUPPORTED_TEXTURE_TYPES 2
-global_variable ID3D11ShaderResourceView* ShaderResourceViews[MAX_SUPPORTED_TEXTURE_TYPES];
+static ID3D11ShaderResourceView* ShaderResourceViews[MAX_SUPPORTED_TEXTURE_TYPES];
 
 int CALLBACK
 WinMain(HINSTANCE Instance,
@@ -339,14 +339,14 @@ WinMain(HINSTANCE Instance,
     RenderCommands.ViewportHeight = WindowHeight;
 
     // TODO: (Ted)  Once this is cross-platform, these buffers could be put on a single allocation up-front.
-    u32 InstancedMeshBufferSize = 200;
+    uint32_t InstancedMeshBufferSize = 200;
     InitializeMeshInstanceBufferWindows(&RenderCommands.FlatColorMeshInstances, InstancedMeshBufferSize);
     InitializeMeshInstanceBufferWindows(&RenderCommands.TexturedMeshInstances, InstancedMeshBufferSize);
     InitializeMeshInstanceBufferWindows(&RenderCommands.LoadedModelMeshInstances, InstancedMeshBufferSize);
 
     HDC RefreshDC = GetDC(WindowHandle);
     int RefreshRate = GetDeviceCaps(RefreshDC, VREFRESH);
-    r32 RefreshRateInFloat = (r32)RefreshRate;
+    float RefreshRateInFloat = (float)RefreshRate;
     Input.dtForFrame = 1.0f/RefreshRateInFloat;
     Input.FrameRateMultiplier = RefreshRateInFloat/60.0f;
 
@@ -355,9 +355,9 @@ WinMain(HINSTANCE Instance,
     LPDIRECTSOUNDBUFFER SecondaryBuffer;
 
     game_startup_config StartupConfig = GameGetStartupConfig();
-    u32 SamplesPerSecond = StartupConfig.SoundSamplesPerSecond;
-    u32 BytesPerSample = StartupConfig.SoundBytesPerSample; 
-    u32 SecondaryBufferSize = StartupConfig.SoundBufferSize;
+    uint32_t SamplesPerSecond = StartupConfig.SoundSamplesPerSecond;
+    uint32_t BytesPerSample = StartupConfig.SoundBytesPerSample; 
+    uint32_t SecondaryBufferSize = StartupConfig.SoundBufferSize;
 
     if (DSoundLibrary)
     {
@@ -410,10 +410,10 @@ WinMain(HINSTANCE Instance,
         }
     }
 
-    u32 RunningSampleIndex = 0;
+    uint32_t RunningSampleIndex = 0;
 
     game_sound_output_buffer SoundOutputBuffer = {};
-    SoundOutputBuffer.Samples = (s16*)calloc(SamplesPerSecond, BytesPerSample); 
+    SoundOutputBuffer.Samples = (int16_t*)calloc(SamplesPerSecond, BytesPerSample); 
     SoundOutputBuffer.SamplesPerSecond = SamplesPerSecond;
     SoundOutputBuffer.SamplesToWriteThisFrame = 0;
     SoundOutputBuffer.SamplesWrittenThisFrame = 0;
@@ -429,7 +429,7 @@ WinMain(HINSTANCE Instance,
     {
         OutputDebugString("SDL Initialized \n");
 
-        u32 JoystickCount = SDL_NumJoysticks();
+        uint32_t JoystickCount = SDL_NumJoysticks();
 
         if (JoystickCount > 0)
         {
@@ -500,7 +500,7 @@ WinMain(HINSTANCE Instance,
         Factory->Release();
     }
 
-    u32 FlatColorVertexBufferSize = sizeof(game_flat_color_vertex)*2000;
+    uint32_t FlatColorVertexBufferSize = sizeof(game_flat_color_vertex)*2000;
     game_flat_color_vertex *FlatColorVertices = 
         (game_flat_color_vertex *)VirtualAlloc(0, FlatColorVertexBufferSize, 
                                                MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
@@ -508,7 +508,7 @@ WinMain(HINSTANCE Instance,
     WindowsFlatColorVertexBuffer = SetupVertexBufferFromGameVertexBuffer(D11Device, FlatColorVertexBufferSize, 
                                                                          FlatColorVertices);
 
-    u32 TextureVertexBufferSize = sizeof(game_texture_vertex)*2000;
+    uint32_t TextureVertexBufferSize = sizeof(game_texture_vertex)*2000;
     game_texture_vertex *TextureVertices =
         (game_texture_vertex *)VirtualAlloc(0, TextureVertexBufferSize, 
                                             MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
@@ -516,7 +516,7 @@ WinMain(HINSTANCE Instance,
     WindowsTextureVertexBuffer = SetupVertexBufferFromGameVertexBuffer(D11Device, TextureVertexBufferSize, 
                                                                        TextureVertices);
 
-    u32 LoadedModelVertexBufferSize = sizeof(game_texture_vertex)*10000;
+    uint32_t LoadedModelVertexBufferSize = sizeof(game_texture_vertex)*10000;
     game_texture_vertex *LoadedModelVertices =
         (game_texture_vertex *)VirtualAlloc(0, LoadedModelVertexBufferSize, 
                                             MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
@@ -524,8 +524,8 @@ WinMain(HINSTANCE Instance,
     WindowsLoadedModelVertexBuffer = SetupVertexBufferFromGameVertexBuffer(D11Device, LoadedModelVertexBufferSize, 
                                                                            LoadedModelVertices);
 
-    u32 IndexBufferSize = sizeof(u32)*10000;
-    u32 *LoadedModelIndices = (u32 *)VirtualAlloc(0, IndexBufferSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+    uint32_t IndexBufferSize = sizeof(uint32_t)*10000;
+    uint32_t *LoadedModelIndices = (uint32_t *)VirtualAlloc(0, IndexBufferSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
     RenderCommands.LoadedModelVertexBuffer.Indices = LoadedModelIndices;
 
     ID3D11Buffer* WindowsLoadedModelIndexBuffer;
@@ -660,7 +660,7 @@ WinMain(HINSTANCE Instance,
     TextureBuffer.Max = 2;
     GameLoadTextures(&GameMemory, &TextureBuffer);
 
-    for (u32 TextureIndex = 0;
+    for (uint32_t TextureIndex = 0;
          TextureIndex < 2;
          TextureIndex++)
     {
@@ -894,7 +894,7 @@ WinMain(HINSTANCE Instance,
                 clear_color GameClearColor = RenderCommands.ClearColor;
                 FLOAT ClearColor[4]; 
 
-                for (u32 Index = 0;
+                for (uint32_t Index = 0;
                      Index < 4;
                      Index++)
                 {
@@ -913,13 +913,13 @@ WinMain(HINSTANCE Instance,
                 if (SUCCEEDED(SecondaryBuffer->GetCurrentPosition(&CurrentPlayCursor,
                                                                   &CurrentWriteCursor)))
                 {
-                    u32 SamplesPerFrameUpdate = SamplesPerSecond/60; 
-                    u32 FramesAhead = 3;
-                    u32 DesiredFrameBytesToWrite = SamplesPerFrameUpdate*FramesAhead*sizeof(s16)*2;
-                    u32 TargetCursor = (CurrentPlayCursor + DesiredFrameBytesToWrite)%SecondaryBufferSize;
+                    uint32_t SamplesPerFrameUpdate = SamplesPerSecond/60; 
+                    uint32_t FramesAhead = 3;
+                    uint32_t DesiredFrameBytesToWrite = SamplesPerFrameUpdate*FramesAhead*sizeof(int16_t)*2;
+                    uint32_t TargetCursor = (CurrentPlayCursor + DesiredFrameBytesToWrite)%SecondaryBufferSize;
                     DWORD ByteToLock = (RunningSampleIndex*BytesPerSample)%SecondaryBufferSize; 
 
-                    u32 BytesToWrite = 0;
+                    uint32_t BytesToWrite = 0;
 
                      if (ByteToLock > TargetCursor) {
                         // NOTE: (ted)  Play Cursor wrapped.
@@ -949,12 +949,12 @@ WinMain(HINSTANCE Instance,
                                                        &Region2, &Region2Size, 0)))
                     {
 
-                        s16* SoundSrc = SoundOutputBuffer.Samples;
+                        int16_t* SoundSrc = SoundOutputBuffer.Samples;
 
-                        s16 *SampleOut = (s16 *)Region1;
+                        int16_t *SampleOut = (int16_t *)Region1;
                         DWORD Region1SampleCount = Region1Size/BytesPerSample;
 
-                        for (u32 SampleIndex = 0;
+                        for (uint32_t SampleIndex = 0;
                              SampleIndex < Region1SampleCount;
                              SampleIndex++)
                         {
@@ -963,10 +963,10 @@ WinMain(HINSTANCE Instance,
                             RunningSampleIndex++;
                         }
 
-                        SampleOut = (s16 *)Region2;
+                        SampleOut = (int16_t *)Region2;
                         DWORD Region2SampleCount = Region2Size/BytesPerSample;
 
-                        for (u32 SampleIndex = 0;
+                        for (uint32_t SampleIndex = 0;
                              SampleIndex < Region2SampleCount;
                              SampleIndex++)
                         {
@@ -1030,7 +1030,7 @@ WinMain(HINSTANCE Instance,
                 mesh_instance_buffer *LoadedModelMeshInstances = &RenderCommands.LoadedModelMeshInstances;
                 game_indexed_vertex_buffer *LoadedModelVertexBuffer = &RenderCommands.LoadedModelVertexBuffer;
 
-                for (u32 Index = 0;
+                for (uint32_t Index = 0;
                      Index < LoadedModelMeshInstances->MeshCount;
                      Index++)
                 {

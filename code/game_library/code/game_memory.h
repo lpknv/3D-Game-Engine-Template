@@ -1,15 +1,15 @@
 
-typedef size_t memory_index;
+typedef size_t size_t;
 
 struct memory_arena
 {
-    memory_index Size;
-    u8* Base;
-    memory_index Used; 
+    size_t Size;
+    uint8_t* Base;
+    size_t Used; 
 };
 
 internal void
-InitializeArena(memory_arena *Arena, memory_index Size, u8* Base)
+InitializeArena(memory_arena *Arena, size_t Size, uint8_t* Base)
 {
     Arena->Size = Size;
     Arena->Base = Base;
@@ -20,7 +20,7 @@ InitializeArena(memory_arena *Arena, memory_index Size, u8* Base)
 #define PushArray(Arena, Count, type) (type *)PushSize_(Arena, (Count)*sizeof(type)) 
 
 void *
-PushSize_(memory_arena *Arena, memory_index Size)
+PushSize_(memory_arena *Arena, size_t Size)
 {
     Assert((Arena->Used + Size) <= Arena->Size);
     void *Result = Arena->Base + Arena->Used;
@@ -31,8 +31,8 @@ PushSize_(memory_arena *Arena, memory_index Size)
 
 struct memory_partition
 {
-    u64 Size;
-    u8* Data; 
+    uint64_t Size;
+    uint8_t* Data; 
 };
 
 struct game_permanent_storage_partition
@@ -48,12 +48,12 @@ struct game_transient_storage_partition
 
 struct game_memory 
 {
-    b32 IsInitialized;
+    int32_t IsInitialized;
 
-    u64 PermanentStorageSize;
+    uint64_t PermanentStorageSize;
     void *PermanentStorage;
 
-    u64 TransientStorageSize;
+    uint64_t TransientStorageSize;
     void *TransientStorage;
     
     platform_read_entire_file *PlatformReadEntireFile;
@@ -69,8 +69,8 @@ struct game_memory
 void 
 ClearMemoryPartition(memory_partition *Partition)
 {
-    u8* Byte = (u8 *)Partition->Data;
-    for (u32 Index = 0; Index < Partition->Size; 
+    uint8_t* Byte = (uint8_t *)Partition->Data;
+    for (uint32_t Index = 0; Index < Partition->Size; 
          Index++)
     {
         *Byte++ = 0;

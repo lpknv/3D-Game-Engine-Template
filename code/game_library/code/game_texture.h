@@ -2,13 +2,13 @@
 struct game_texture
 {
     void *Data;
-    u32 Width;
-    u32 Height;
+    uint32_t Width;
+    uint32_t Height;
 };
 
 struct game_texture_buffer
 {
     game_texture *Textures;
-    u32 Count;
-    u32 Max;
+    uint32_t Count;
+    uint32_t Max;
 };

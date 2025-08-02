@@ -24,7 +24,7 @@ matrix GenerateScaleMatrix(vector_float_3 S)
 }
 
 internal
-matrix GenerateXRotationMatrix(r32 R)
+matrix GenerateXRotationMatrix(float R)
 {
     matrix RotateX = { 1, 0,       0,       0,
                        0, cos(R),  -sin(R), 0, 
@@ -62,7 +62,7 @@ matrix_float4x4 GenerateScaleMatrix(vector_float_3 S)
 }
 
 internal
-matrix_float4x4 GenerateXRotationMatrix(r32 R)
+matrix_float4x4 GenerateXRotationMatrix(float R)
 {
     matrix_float4x4 RotateX = (matrix_float4x4) {{
         { 1, 0,       0,       0 },

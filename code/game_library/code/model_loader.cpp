@@ -16,7 +16,7 @@
 #define GREEN   { 0, 1, 0 }
 #define BLUE    { 0, 0, 1 }
 
-void LoadColoredCubeVertices(game_vertex_buffer *VertexBuffer, r32 *RGBColor)
+void LoadColoredCubeVertices(game_vertex_buffer *VertexBuffer, float *RGBColor)
 {
     // XYZ Vertices, RGB Color
     // NOTE: (Ted) Counter-Clockwise Winding
@@ -90,7 +90,7 @@ void LoadColoredCubeVertices(game_vertex_buffer *VertexBuffer, r32 *RGBColor)
     Range.VertexCount = CUBE_VERTEX_COUNT;
     VertexBuffer->ModelRanges[VertexBuffer->ModelCount] = Range;
 
-    for (u32 Index = 0;
+    for (uint32_t Index = 0;
          Index < CUBE_VERTEX_COUNT;
          Index++)
     {
@@ -105,8 +105,8 @@ void LoadColoredCubeVertices(game_vertex_buffer *VertexBuffer, r32 *RGBColor)
 
 struct vertex_lookup
 {
-    u32 Hash;
-    u32 VertexIndex;
+    uint32_t Hash;
+    uint32_t VertexIndex;
 };
 
 struct temp_vertex_data
@@ -137,8 +137,8 @@ GAME_LOAD_3D_MODELS(GameLoad3DModels)
     {
         game_texture_vertex *Vertices = (game_texture_vertex *)LoadedModelVertexBuffer->Vertices;
 
-        u32 *Indices = (u32 *)LoadedModelVertexBuffer->Indices;
-        u32 IndexCount = 0;
+        uint32_t *Indices = (uint32_t *)LoadedModelVertexBuffer->Indices;
+        uint32_t IndexCount = 0;
 
         temp_vertex_data *TempVertexData = (temp_vertex_data *)Memory->TransientPartition.SecondaryGeneric.Data;
 
@@ -147,20 +147,20 @@ GAME_LOAD_3D_MODELS(GameLoad3DModels)
 
         Scan = ScanToLineStartingWithCharacter('v', Scan, Line);
 
-        u32 PositionIndex = 0;
-        b32 LoadingPositions = true;
+        uint32_t PositionIndex = 0;
+        int32_t LoadingPositions = true;
 
 #if WINDOWS
         
         // NOTE: (Ted)  On Windows, a newline is represented as \r\n, thus 
         //              two characters.
-        u32 NewLineCharacterCount = 2;
+        uint32_t NewLineCharacterCount = 2;
 
 #elif MACOS
         
         // NOTE: (Ted)  On Mac OS, a newline is represented as \n, thus 
         //              one character.
-        u32 NewLineCharacterCount = 1;
+        uint32_t NewLineCharacterCount = 1;
 #endif
 
         while(LoadingPositions)
@@ -170,21 +170,21 @@ GAME_LOAD_3D_MODELS(GameLoad3DModels)
             //              the start of an actual floating point number.
             Scan += 2;
 
-            u32 PositionDigits = 6;
+            uint32_t PositionDigits = 6;
             obj_scan_result ObjScan = ConstructFloatFromScan(Scan, PositionDigits);
-            r32 X = ObjScan.Value; 
+            float X = ObjScan.Value; 
             Scan = ObjScan.AdvancedScan;
 
             Scan++;
 
             ObjScan = ConstructFloatFromScan(Scan, PositionDigits);
-            r32 Y = ObjScan.Value;
+            float Y = ObjScan.Value;
             Scan = ObjScan.AdvancedScan;
 
             Scan++;
 
             ObjScan = ConstructFloatFromScan(Scan, PositionDigits);
-            r32 Z = ObjScan.Value;
+            float Z = ObjScan.Value;
             Scan = ObjScan.AdvancedScan;
 
             Scan += NewLineCharacterCount;
@@ -211,8 +211,8 @@ GAME_LOAD_3D_MODELS(GameLoad3DModels)
             }
         }
 
-        u32 UVIndex = 0;
-        b32 LoadingUVs = true;
+        uint32_t UVIndex = 0;
+        int32_t LoadingUVs = true;
 
         while(LoadingUVs)
         {
@@ -221,15 +221,15 @@ GAME_LOAD_3D_MODELS(GameLoad3DModels)
             //              meant to be a UV.
             Scan +=3;
 
-            u32 UVDigits = 6;
+            uint32_t UVDigits = 6;
             obj_scan_result ObjScan = ConstructFloatFromScan(Scan, UVDigits);
-            r32 U = ObjScan.Value; 
+            float U = ObjScan.Value; 
             Scan = ObjScan.AdvancedScan;
 
             Scan++;
 
             ObjScan = ConstructFloatFromScan(Scan, UVDigits);
-            r32 V = ObjScan.Value;
+            float V = ObjScan.Value;
             Scan = ObjScan.AdvancedScan;
 
             Scan += NewLineCharacterCount;
@@ -255,28 +255,28 @@ GAME_LOAD_3D_MODELS(GameLoad3DModels)
             }
         }
 
-        u32 NormalIndex = 0;
-        b32 LoadingNormals = true;
+        uint32_t NormalIndex = 0;
+        int32_t LoadingNormals = true;
 
         while(LoadingNormals)
         {
             Scan +=3;
 
-            u32 NormalDigits = 4;
+            uint32_t NormalDigits = 4;
             obj_scan_result ObjScan = ConstructFloatFromScan(Scan, NormalDigits);
-            r32 X = ObjScan.Value; 
+            float X = ObjScan.Value; 
             Scan = ObjScan.AdvancedScan;
 
             Scan++;
 
             ObjScan = ConstructFloatFromScan(Scan, NormalDigits);
-            r32 Y = ObjScan.Value;
+            float Y = ObjScan.Value;
             Scan = ObjScan.AdvancedScan;
 
             Scan++;
 
             ObjScan = ConstructFloatFromScan(Scan, NormalDigits);
-            r32 Z = ObjScan.Value;
+            float Z = ObjScan.Value;
             Scan = ObjScan.AdvancedScan;
 
             Scan += NewLineCharacterCount;
@@ -309,25 +309,25 @@ GAME_LOAD_3D_MODELS(GameLoad3DModels)
         //              start of the actual face data.
         Scan += 2;
 
-        u32 PositionCount = PositionIndex + 1;
-        u32 UVCount = UVIndex + 1;
-        u32 NormalCount = NormalIndex + 1;
+        uint32_t PositionCount = PositionIndex + 1;
+        uint32_t UVCount = UVIndex + 1;
+        uint32_t NormalCount = NormalIndex + 1;
 
-        u32 VertexIndex = 0;
-        b32 LoadingFaces = true;
+        uint32_t VertexIndex = 0;
+        int32_t LoadingFaces = true;
      
-        u32 VertexParseCount = 0;
+        uint32_t VertexParseCount = 0;
 
         while(LoadingFaces)
         {
             obj_face_scan FaceScan = GetFaceCharactersUpToToken(Scan, '/');
-            u32 PositionLookupIndex = GetFaceLookupIndexFromCharacters(FaceScan.Characters, FaceScan.CharacterCount);
+            uint32_t PositionLookupIndex = GetFaceLookupIndexFromCharacters(FaceScan.Characters, FaceScan.CharacterCount);
             Scan = FaceScan.AdvancedScan;
 
             // TODO: (Ted)  See if scan starts where it needs to
 
             FaceScan = GetFaceCharactersUpToToken(Scan, '/');
-            u32 UVLookupIndex = GetFaceLookupIndexFromCharacters(FaceScan.Characters, FaceScan.CharacterCount);
+            uint32_t UVLookupIndex = GetFaceLookupIndexFromCharacters(FaceScan.Characters, FaceScan.CharacterCount);
             Scan = FaceScan.AdvancedScan;
 
             char NormalScanToToken = ' ';
@@ -342,16 +342,16 @@ GAME_LOAD_3D_MODELS(GameLoad3DModels)
             }
 
             FaceScan = GetFaceCharactersUpToToken(Scan, NormalScanToToken);
-            u32 NormalLookupIndex = GetFaceLookupIndexFromCharacters(FaceScan.Characters, FaceScan.CharacterCount);
+            uint32_t NormalLookupIndex = GetFaceLookupIndexFromCharacters(FaceScan.Characters, FaceScan.CharacterCount);
             Scan = FaceScan.AdvancedScan;
 
             VertexParseCount++;
 
-            u64 HashValue = NormalCount*UVCount*NormalLookupIndex + UVCount*UVLookupIndex + PositionLookupIndex + 1;
-            u32 HashIndex = (u32)(HashValue%VERTEX_LOOKUP_HASH_COUNT);
+            uint64_t HashValue = NormalCount*UVCount*NormalLookupIndex + UVCount*UVLookupIndex + PositionLookupIndex + 1;
+            uint32_t HashIndex = (uint32_t)(HashValue%VERTEX_LOOKUP_HASH_COUNT);
 
-            b32 FoundOrCreatedVertexIndex = false;
-            u32 AttemptCount = 0;
+            int32_t FoundOrCreatedVertexIndex = false;
+            uint32_t AttemptCount = 0;
 
             while (!FoundOrCreatedVertexIndex)
             {
@@ -450,10 +450,10 @@ GAME_LOAD_3D_MODELS(GameLoad3DModels)
     Memory->PlatformFreeFileMemory(&Thread, Result.Contents);
     ClearMemoryPartition(&Memory->TransientPartition.SecondaryGeneric);
 
-    r32 yMin = 0.0f;
-    r32 yMax = 0.0f;
+    float yMin = 0.0f;
+    float yMax = 0.0f;
 
-    for (u32 Index = 0;
+    for (uint32_t Index = 0;
          Index < LoadedModelVertexBuffer->VertexCount;
          Index++)
     {
@@ -462,10 +462,10 @@ GAME_LOAD_3D_MODELS(GameLoad3DModels)
 
 #if WINDOWS
         Vertex->Position[0] *= -1;
-        r32 yPosition = Vertex->Position[1];
+        float yPosition = Vertex->Position[1];
 #elif MACOS
         Vertex->Position.x *= -1;
-        r32 yPosition = Vertex->Position.y;
+        float yPosition = Vertex->Position.y;
 #endif
     
         if (yPosition < yMin)
@@ -479,28 +479,28 @@ GAME_LOAD_3D_MODELS(GameLoad3DModels)
         }
     }
 
-    r32 ModelHeight = yMax - yMin;
+    float ModelHeight = yMax - yMin;
     LoadedModelVertexBuffer->ModelHeight = ModelHeight;
 
     game_vertex_buffer *FlatColorVertexBuffer = &RenderCommands->FlatColorVertexBuffer;
     FlatColorVertexBuffer->VertexCount = 0;
     FlatColorVertexBuffer->ModelCount = 0;
 
-    r32 Red[3];
+    float Red[3];
     Red[0] = 1;
     Red[1] = 0;
     Red[2] = 0;
 
     LoadColoredCubeVertices(FlatColorVertexBuffer, Red);
 
-    r32 Green[3];
+    float Green[3];
     Green[0] = 0;
     Green[1] = 1;
     Green[2] = 0;
 
     LoadColoredCubeVertices(FlatColorVertexBuffer, Green);
 
-    r32 Blue[3];
+    float Blue[3];
     Blue[0] = 0;
     Blue[1] = 0;
     Blue[2] = 1;
@@ -582,7 +582,7 @@ GAME_LOAD_3D_MODELS(GameLoad3DModels)
     Range.VertexCount = CUBE_VERTEX_COUNT;
     TextureVertexBuffer->ModelRanges[TextureVertexBuffer->ModelCount] = Range;
 
-    for (u32 Index = 0;
+    for (uint32_t Index = 0;
          Index < CUBE_VERTEX_COUNT;
          Index++)
     {

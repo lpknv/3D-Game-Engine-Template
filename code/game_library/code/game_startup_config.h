@@ -1,8 +1,8 @@
 struct game_startup_config
 {
-    u32 SoundSamplesPerSecond;
-    u32 SoundBytesPerSample;
-    u32 SoundBufferSize;
+    uint32_t SoundSamplesPerSecond;
+    uint32_t SoundBytesPerSample;
+    uint32_t SoundBufferSize;
 };
 
 #define GAME_GET_STARTUP_CONFIG(name) game_startup_config name()
