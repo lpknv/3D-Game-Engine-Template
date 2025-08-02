@@ -97,7 +97,7 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
     if (Input1->Down.EndedDown &&
         GameState->ActionSlopFrames == 0)
-    {
+    { 
         int32_t NextY = GameState->PlayerP.Y - 1;
 
         if (NextY >= 0 && NextY < CubeMap->CountY)
@@ -280,7 +280,7 @@ GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     if (RotateCamera)
     {
         static float CameraRotation = 0.0f;
-        CameraRotation += 0.010f;
+        CameraRotation += 0.0005f;
 
 #if WINDOWS
         matrix CameraRotateZ = { (float)(cos(CameraRotation)), -(float)(sin(CameraRotation)),   0,  0,
