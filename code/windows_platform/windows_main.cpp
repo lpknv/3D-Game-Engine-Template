@@ -48,7 +48,7 @@ PLATFORM_READ_PNG_FILE(PlatformReadPNGFile)
     return Result;
 }
 
-#include "../game_library/code/vario.cpp"
+#include "../game_library/vario.cpp"
 
 #include "windows_file_io.h"
 #include "windows_d3d_resource_setup.h"
