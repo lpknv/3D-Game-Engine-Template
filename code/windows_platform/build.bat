@@ -5,7 +5,6 @@ set optimizer_flags= -Zi
 
 if "%~1" == "-release" (
 set optimizer_flags= -O2 -DNDEBUG=1
-launch.bat
 )
 
 set ignored_warnings=-wd4805 -wd4244 -wd4018 -wd4838 -wd4700
@@ -48,5 +47,8 @@ popd
 mt.exe -manifest "VariosTemple.exe.manifest" -outputresource:"%windows_build_path%\VariosTemple.exe;1" -nologo
 
 if "%~1" == "-launch" (
-launch.bat
+set "project_dir=D:\gamedev\3DGameEngineTemplate\build\windows"
+pushd "%project_dir%"
+start "" "VariosTemple.exe"
+popd
 )
