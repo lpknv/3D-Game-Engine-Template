@@ -8,6 +8,7 @@ set optimizer_flags= -O2 -DNDEBUG=1
 )
 
 set ignored_warnings=-wd4805 -wd4244 -wd4018 -wd4838 -wd4700
+set windows_build_dir=D:\gamedev\3DGameEngineTemplate\build\windows
 set windows_build_path=..\..\build\windows
 set resources_path=..\..\resources
 set included_libraries=user32.lib d3d11.lib gdi32.lib dxguid.lib ole32.lib dwmapi.lib 
@@ -47,8 +48,13 @@ popd
 mt.exe -manifest "VariosTemple.exe.manifest" -outputresource:"%windows_build_path%\VariosTemple.exe;1" -nologo
 
 if "%~1" == "-launch" (
-set "project_dir=D:\gamedev\3DGameEngineTemplate\build\windows"
-pushd "%project_dir%"
+pushd "%windows_build_dir%"
 start "" "VariosTemple.exe"
+popd
+)
+
+if "%~1" == "-debug" (
+pushd "%windows_build_dir%"
+devenv "VariosTemple.exe"
 popd
 )
